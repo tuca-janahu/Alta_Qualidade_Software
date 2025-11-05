@@ -24,9 +24,9 @@ for c in clientes:
 
 valores = []
 for p in pedidos:
-    v = processar_pedido(p)
-    valores.append(v)
-    print("pedido:", p, "-- valor final:", v)
+    valor_final = processar_pedido(p)
+    valores.append(valor_final)
+    print("pedido:", p, "-- valor final:", valor_final)
 
 print("TOTAL =", sum(valores))
 print("==== Fim processamento PetroBahia ====")
