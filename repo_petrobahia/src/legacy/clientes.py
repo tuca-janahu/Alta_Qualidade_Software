@@ -11,46 +11,11 @@ Contém:
 from __future__ import annotations
 
 import logging
-import re
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Protocol
 
-EMAIL_REGEX = re.compile(r"^[^\s@]+@[^\s@]+\.[^\s@]+$")
-
-
-# 1) ENTIDADE
-
-@dataclass(slots=True)
-class Cliente:
-    """Entidade Cliente com validação ao construir."""
-    nome: str
-    email: str
-
-    def __post_init__(self) -> None:
-        if not self.nome or not self.nome.strip():
-            raise ValueError("O nome do cliente não pode estar em branco.")
-
-        cleaned = self._clean_email(self.email)
-        if not self._validate_email(cleaned):
-            raise ValueError(f"Formato de email inválido: {self.email!r}")
-
-        # normaliza
-        self.nome = self.nome.strip()
-        self.email = cleaned
-
-    @staticmethod
-    def _clean_email(email: str) -> str:
-        if not isinstance(email, str):
-            return ""
-        return email.strip().lower().replace("@@", "@")
-
-    @staticmethod
-    def _validate_email(email: str) -> bool:
-        return bool(EMAIL_REGEX.match(email))
-
-    def to_storage_format(self) -> str:
-        return f"{self.nome},{self.email}"
+# A entidade Cliente foi movida para `cliente.py` para seguir PEP8/SOLID
+from .cliente import Cliente
 
 
 # 2) PORTAS (Protocol) + ADAPTERS
@@ -98,4 +63,3 @@ def cadastrar_cliente(
     notifier.send_welcome_email(cliente)
     logging.info("Cliente cadastrado: %s <%s>", cliente.nome, cliente.email)
     return cliente
-    
