@@ -14,12 +14,10 @@ import logging
 from pathlib import Path
 from typing import Protocol
 
-# A entidade Cliente foi movida para `cliente.py` para seguir PEP8/SOLID
-from .cliente import Cliente
+from ..domains.cliente import Cliente
 
 
 # 2) PORTAS (Protocol) + ADAPTERS
-
 class ClienteRepository(Protocol):
     """Porta de persistência (abstração)."""
     def save(self, cliente: Cliente) -> None: ...
@@ -37,7 +35,6 @@ class FileClienteRepository:
         except OSError as exc:
             raise IOError(f"Falha ao salvar em {self.path}") from exc
 
-
 class NotificationService(Protocol):
     """Porta de notificação (abstração)."""
     def send_welcome_email(self, cliente: Cliente) -> None: ...
@@ -50,7 +47,6 @@ class ConsoleNotificationService:
 
 
 # 3) CASO DE USO
-
 def cadastrar_cliente(
     nome: str,
     email: str,
