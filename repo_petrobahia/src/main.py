@@ -1,5 +1,5 @@
-from legacy.pedido_service import processar_pedido
-from legacy.clientes import cadastrar_cliente
+from .services.preco_calculadora import processar_pedido
+from .services.servico_cliente import cadastrar_cliente
 
 pedidos = [
     {"cliente": "TransLog", "produto": "diesel", "qtd": 1200, "cupom": "MEGA10"},
