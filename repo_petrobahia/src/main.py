@@ -34,7 +34,7 @@ def run() -> None:
     # ✅ chama com (nome, email, repo, notifier)
     for c in clientes:
         try:
-            cadastrar_cliente(c["nome"], c["email"], repo, notifier)
+            cadastrar_cliente(c["nome"], c["email"], c.get("cnpj"), repo, notifier)
             print("cliente ok:", c["nome"])
         except Exception as exc:
             print("cliente com problema:", c, f"— {exc}")

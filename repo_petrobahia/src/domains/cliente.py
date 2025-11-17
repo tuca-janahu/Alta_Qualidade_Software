@@ -33,9 +33,25 @@ class Cliente:
 
     @staticmethod
     def _clean_email(email: str) -> str:
+        """
+            Normaliza e corrige pequenos erros comuns:
+            - remove espaços e baixa caixa
+            - troca '@@' por '@'
+            - se houver '@' mas o domínio não tiver '.', acrescenta '.com'
+        """
+        
         if not isinstance(email, str):
             return ""
-        return email.strip().lower().replace("@@", "@")
+        e = email.strip().lower().replace("@@", "@")
+
+        # Se tem '@' e o domínio não contém '.', acrescenta '.com'
+        if "@" in e:
+            local, domain = e.split("@", 1)
+            if domain and "." not in domain:
+                domain = domain + ".com"
+                e = f"{local}@{domain}"
+
+        return e
 
     @staticmethod
     def _validate_email(email: str) -> bool:

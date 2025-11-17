@@ -1,2 +1,0 @@
-{'nome': 'Ana Paula', 'email': 'ana@@petrobahia', 'cnpj': '123'}
-{'nome': 'Carlos', 'email': 'carlos@petrobahia.com', 'cnpj': '456'}

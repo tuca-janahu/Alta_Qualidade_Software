@@ -24,9 +24,10 @@ class ClienteRepository(Protocol):
 
 
 class FileClienteRepository:
-    """Repositório baseado em arquivo texto (adapter)."""
-    def __init__(self, path: Path | str = "clientes.txt") -> None:
-        self.path = Path(path)
+    """Salva em <src>/clientes.txt por padrão."""
+    def __init__(self, path: str | Path | None = None) -> None:
+        default_path = Path(__file__).resolve().parents[1] / "clientes.txt"
+        self.path = Path(path) if path else default_path
 
     def save(self, cliente: Cliente) -> None:
         try:
@@ -50,6 +51,7 @@ class ConsoleNotificationService:
 def cadastrar_cliente(
     nome: str,
     email: str,
+    cnpj: str | None,
     repository: ClienteRepository,
     notifier: NotificationService,
 ) -> Cliente:
