@@ -53,6 +53,10 @@ def cadastrar_cliente(
     repository: ClienteRepository,
     notifier: NotificationService,
 ) -> Cliente:
+    """
+    Orquestra o cadastro: valida, persiste e notifica.
+    Lança ValueError para dados inválidos e IOError para falha de I/O.
+    """
 
     cliente = Cliente(nome, email)
     repository.save(cliente)
