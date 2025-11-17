@@ -1,5 +1,17 @@
-from .services.preco_calculadora import processar_pedido
-from .services.servico_cliente import cadastrar_cliente
+from __future__ import annotations
+
+import logging
+from decimal import Decimal
+
+from src.services.preco_calculadora import processar_pedido
+from src.services.servico_cliente import (
+    FileClienteRepository,
+    ConsoleNotificationService,
+    cadastrar_cliente,
+)
+from src.domains.pedido import Pedido, Produto  
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
 pedidos = [
     {"cliente": "TransLog", "produto": "diesel", "qtd": 1200, "cupom": "MEGA10"},
@@ -13,20 +25,34 @@ clientes = [
     {"nome": "Carlos", "email": "carlos@petrobahia.com", "cnpj": "456"},
 ]
 
-print("==== Início processamento PetroBahia ====")
+def run() -> None:
+    print("==== Início processamento PetroBahia ====")
 
-for c in clientes:
-    ok = cadastrar_cliente(c)
-    if ok:
-        print("cliente ok:", c["nome"])
-    else:
-        print("cliente com problema:", c)
+    repo = FileClienteRepository("clientes.txt")
+    notifier = ConsoleNotificationService()
 
-valores = []
-for p in pedidos:
-    valor_final = processar_pedido(p)
-    valores.append(valor_final)
-    print("pedido:", p, "-- valor final:", valor_final)
+    # ✅ chama com (nome, email, repo, notifier)
+    for c in clientes:
+        try:
+            cadastrar_cliente(c["nome"], c["email"], repo, notifier)
+            print("cliente ok:", c["nome"])
+        except Exception as exc:
+            print("cliente com problema:", c, f"— {exc}")
 
-print("TOTAL =", sum(valores))
-print("==== Fim processamento PetroBahia ====")
+    valores: list[Decimal] = []
+    for p in pedidos:
+        pedido = Pedido(
+            cliente=p["cliente"],
+            produto=Produto(p["produto"]),
+            qtd=int(p["qtd"]),
+            cupom=p.get("cupom"),
+        )
+        valor_final = processar_pedido(pedido)
+        valores.append(valor_final)
+        print("pedido:", p, "-- valor final:", valor_final)
+
+    print("TOTAL =", sum(valores))
+    print("==== Fim processamento PetroBahia ====")
+
+if __name__ == "__main__":
+    run()

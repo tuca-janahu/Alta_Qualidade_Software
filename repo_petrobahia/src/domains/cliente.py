@@ -16,6 +16,8 @@ class Cliente:
 
     nome: str
     email: str
+    cnpj: str | None = None
+
 
     def __post_init__(self) -> None:
         if not self.nome or not self.nome.strip():
@@ -40,4 +42,4 @@ class Cliente:
         return bool(EMAIL_REGEX.match(email))
 
     def to_storage_format(self) -> str:
-        return f"{self.nome},{self.email}"
+        return f"{self.nome},{self.email},{self.cnpj or ''}"
