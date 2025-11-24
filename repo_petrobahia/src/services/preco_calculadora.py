@@ -113,6 +113,13 @@ ESTRATEGIAS: Final[dict[Produto, EstrategiaPreco]] = {
 
 
 def processar_pedido(pedido: Pedido) -> Decimal:
+    """
+    Calcula o valor final do pedido:
+    - qtd == 0 -> 0
+    - preço bruto negativo -> força 0 (tolerância do legado)
+    - aplica cupom
+    - aplica arredondamento conforme produto
+    """
     if pedido.qtd == 0:
         logging.info("Qtd zero para %s -> 0.", pedido.cliente)
         return Decimal("0")
