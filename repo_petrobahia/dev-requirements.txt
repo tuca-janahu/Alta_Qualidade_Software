@@ -1,5 +1,0 @@
-pytest>=8.0
-black>=24.0
-isort>=5.13
-mypy>=1.10
-future>=1.0.0
