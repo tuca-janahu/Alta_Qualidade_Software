@@ -60,8 +60,8 @@ def cadastrar_cliente(
     Lança ValueError para dados inválidos e IOError para falha de I/O.
     """
 
-    cliente = Cliente(nome, email)
+    cliente = Cliente(nome, email, cnpj)
     repository.save(cliente)
     notifier.send_welcome_email(cliente)
-    logging.info("Cliente cadastrado: %s <%s>", cliente.nome, cliente.email)
+    logging.info("Cliente cadastrado: %s <%s> (%s)", cliente.nome, cliente.email, cliente.cnpj)
     return cliente
