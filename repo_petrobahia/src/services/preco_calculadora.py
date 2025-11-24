@@ -1,3 +1,10 @@
+"""
+Regras de cálculo de preço de pedidos:
+- preço bruto por produto/qtd
+- aplicação de cupons
+- arredondamentos/truncamentos por produto
+"""
+
 from __future__ import annotations
 
 import logging
