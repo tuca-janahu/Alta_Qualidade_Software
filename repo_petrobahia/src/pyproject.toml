@@ -4,21 +4,18 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "petrobahia"
-version = "0.1.0"
+version = "1.0.1"
 description = "Exemplo Domain + Services para pedidos e clientes"
 requires-python = ">=3.11"
-# Dependências de runtime (por enquanto, nenhuma)
 dependencies = []
 
-# Extras (grupos opcionais). Aqui vai o antigo dev-requirements.
 [project.optional-dependencies]
 dev = [
   "pytest>=8.0",
   "black>=24.0",
   "isort>=5.13",
   "mypy>=1.10",
-  # opcional:
-  # "ruff>=0.6",
+
 ]
 
 [tool.pytest.ini_options]
@@ -31,10 +28,3 @@ line-length = 88
 [tool.isort]
 profile = "black"
 
-# (opcionais, se decidir usar)
-#[tool.mypy]
-#python_version = "3.11"
-#strict = true
-
-#[tool.ruff]
-#line-length = 88
