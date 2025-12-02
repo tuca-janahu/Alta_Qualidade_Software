@@ -1,0 +1,10 @@
+Metadata-Version: 2.4
+Name: petrobahia
+Version: 1.0.1
+Summary: Exemplo Domain + Services para pedidos e clientes
+Requires-Python: >=3.11
+Provides-Extra: dev
+Requires-Dist: pytest>=8.0; extra == "dev"
+Requires-Dist: black>=24.0; extra == "dev"
+Requires-Dist: isort>=5.13; extra == "dev"
+Requires-Dist: mypy>=1.10; extra == "dev"

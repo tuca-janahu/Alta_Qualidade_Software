@@ -42,16 +42,16 @@ class Cliente:
         
         if not isinstance(email, str):
             return ""
-        e = email.strip().lower().replace("@@", "@")
+        email_limpo = email.strip().lower().replace("@@", "@")
 
         # Se tem '@' e o domínio não contém '.', acrescenta '.com'
-        if "@" in e:
-            local, domain = e.split("@", 1)
+        if "@" in email_limpo:
+            local, domain = email_limpo.split("@", 1)
             if domain and "." not in domain:
                 domain = domain + ".com"
-                e = f"{local}@{domain}"
+                email_limpo = f"{local}@{domain}"
 
-        return e
+        return email_limpo
 
     @staticmethod
     def _validate_email(email: str) -> bool:

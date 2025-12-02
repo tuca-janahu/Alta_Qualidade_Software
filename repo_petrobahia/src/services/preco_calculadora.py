@@ -1,6 +1,6 @@
 """
 Regras de cálculo de preço de pedidos:
-- preço bruto por produto/qtd
+- preço bruto por produto/quantidade
 - aplicação de cupons
 - arredondamentos/truncamentos por produto
 """
@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
-from decimal import Decimal, ROUND_HALF_UP, ROUND_DOWN, getcontext
+from decimal import ROUND_DOWN, ROUND_HALF_UP, Decimal, getcontext
 from typing import Final
 
 from ..domains.pedido import Pedido, Produto
@@ -25,7 +25,7 @@ class EstrategiaPreco(ABC):
     BASE_PRICE: Decimal = Decimal("0.00")
 
     @abstractmethod
-    def calcular_bruto(self, qtd: int) -> Decimal:
+    def calcular_bruto(self, quantidade: int) -> Decimal:
         """Calcula o preço bruto baseado na quantidade."""
         pass
 
@@ -52,11 +52,11 @@ class EstrategiaPreco(ABC):
 class EstrategiaDiesel(EstrategiaPreco):
     BASE_PRICE = Decimal("3.99")
 
-    def calcular_bruto(self, qtd: int) -> Decimal:
-        total = self.BASE_PRICE * qtd
-        if qtd > 1000:
+    def calcular_bruto(self, quantidade: int) -> Decimal:
+        total = self.BASE_PRICE * quantidade
+        if quantidade > 1000:
             return total * Decimal("0.90")
-        if qtd > 500:
+        if quantidade > 500:
             return total * Decimal("0.95")
         return total
 
@@ -68,9 +68,9 @@ class EstrategiaDiesel(EstrategiaPreco):
 class EstrategiaGasolina(EstrategiaPreco):
     BASE_PRICE = Decimal("5.19")
 
-    def calcular_bruto(self, qtd: int) -> Decimal:
-        total = self.BASE_PRICE * qtd
-        if qtd > 200:
+    def calcular_bruto(self, quantidade: int) -> Decimal:
+        total = self.BASE_PRICE * quantidade
+        if quantidade > 200:
             return total - Decimal("100")
         return total
 
@@ -82,9 +82,9 @@ class EstrategiaGasolina(EstrategiaPreco):
 class EstrategiaEtanol(EstrategiaPreco):
     BASE_PRICE = Decimal("3.59")
 
-    def calcular_bruto(self, qtd: int) -> Decimal:
-        total = self.BASE_PRICE * qtd
-        if qtd > 80:
+    def calcular_bruto(self, quantidade: int) -> Decimal:
+        total = self.BASE_PRICE * quantidade
+        if quantidade > 80:
             return total * Decimal("0.97")
         return total
 
@@ -96,9 +96,9 @@ class EstrategiaEtanol(EstrategiaPreco):
 class EstrategiaLubrificante(EstrategiaPreco):
     BASE_PRICE = Decimal("25.00")
 
-    def calcular_bruto(self, qtd: int) -> Decimal:
+    def calcular_bruto(self, quantidade: int) -> Decimal:
         # Otimização: Substituído loop for por multiplicação simples
-        return self.BASE_PRICE * qtd
+        return self.BASE_PRICE * quantidade
 
     def aplicar_cupom(self, valor: Decimal, cupom: str | None) -> Decimal:
         # Sobrescreve para tratar o cupom específico, depois chama o pai para os genéricos
@@ -122,13 +122,13 @@ ESTRATEGIAS: Final[dict[Produto, EstrategiaPreco]] = {
 def processar_pedido(pedido: Pedido) -> Decimal:
     """
     Calcula o valor final do pedido:
-    - qtd == 0 -> 0
+    - quantidade == 0 -> 0
     - preço bruto negativo -> força 0 (tolerância do legado)
     - aplica cupom
     - aplica arredondamento conforme produto
     """
-    if pedido.qtd == 0:
-        logging.info("Qtd zero para %s -> 0.", pedido.cliente)
+    if pedido.quantidade == 0:
+        logging.info("quantidade zero para %s -> 0.", pedido.cliente)
         return Decimal("0")
 
     # Recupera a estratégia correta (Polimorfismo)
@@ -139,7 +139,7 @@ def processar_pedido(pedido: Pedido) -> Decimal:
         return Decimal("0")
 
     # O fluxo agora é limpo e linear
-    preco = estrategia.calcular_bruto(pedido.qtd)
+    preco = estrategia.calcular_bruto(pedido.quantidade)
 
     if preco < 0:
         logging.warning("Preço negativo corrigido.")

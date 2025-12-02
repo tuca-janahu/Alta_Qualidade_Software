@@ -3,13 +3,13 @@ from __future__ import annotations
 import logging
 from decimal import Decimal
 
+from src.domains.pedido import Pedido, Produto
 from src.services.preco_calculadora import processar_pedido
 from src.services.servico_cliente import (
-    FileClienteRepository,
     ConsoleNotificationService,
+    FileClienteRepository,
     cadastrar_cliente,
 )
-from src.domains.pedido import Pedido, Produto  
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
@@ -31,7 +31,7 @@ def run() -> None:
     repo = FileClienteRepository("clientes.txt")
     notifier = ConsoleNotificationService()
 
-    # ✅ chama com (nome, email, repo, notifier)
+    # chama com (nome, email, repo, notifier)
     for c in clientes:
         try:
             cadastrar_cliente(c["nome"], c["email"], c.get("cnpj"), repo, notifier)
@@ -44,7 +44,7 @@ def run() -> None:
         pedido = Pedido(
             cliente=p["cliente"],
             produto=Produto(p["produto"]),
-            qtd=int(p["qtd"]),
+            quantidade=int(p["qtd"]),
             cupom=p.get("cupom"),
         )
         valor_final = processar_pedido(pedido)
